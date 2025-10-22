@@ -57,14 +57,14 @@ export default function App() {
   };
 
   return (
+    
     <ImageBackground source={bgImage} style={styles.background} resizeMode="cover">
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>THE FOOD APP</Text>
-
-        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-          <Text style={styles.buttonText}>Add Food Item</Text>
-        </TouchableOpacity>
-
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Total Dishes Available</Text>
+          <Text>{starters.length + mains.length + desserts.length}</Text>
+        </View>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Starters</Text>
           {starters.map((dish, i) => (
@@ -75,7 +75,8 @@ export default function App() {
             </View>
           ))}
         </View>
-
+        
+          
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Mains</Text>
           {mains.map((dish, i) => (
@@ -98,56 +99,65 @@ export default function App() {
           ))}
         </View>
 
-        <Modal
-          visible={modalVisible}
-          transparent={true}
-          animationType="slide"
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>Add Food Details</Text>
-
-              <TextInput
-                style={styles.input}
-                placeholder="Dish Name"
-                value={formData.name}
-                onChangeText={(text) => handleInputChange('name', text)}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Description"
-                value={formData.description}
-                onChangeText={(text) => handleInputChange('description', text)}
-              />
-              <View style={styles.pickerWrapper}>
-                <Picker
-                  selectedValue={formData.courseType}
-                  onValueChange={(value) => handleInputChange('courseType', value)}
-                  style={styles.picker}
-                >
-                  <Picker.Item label="Select Course Type..." value="" />
-                  <Picker.Item label="Starter" value="starter" />
-                  <Picker.Item label="Main" value="main" />
-                  <Picker.Item label="Dessert" value="dessert" />
-                </Picker>
-              </View>
-              <TextInput
-                style={styles.input}
-                placeholder="Price"
-                keyboardType="numeric"
-                value={formData.price}
-                onChangeText={(text) => handleInputChange('price', text)}
-              />
-
-              <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                <Text style={styles.submitButtonText}>Submit</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-
         <StatusBar style="auto" />
       </ScrollView>
+
+     
+      {!modalVisible && (
+        <TouchableOpacity style={styles.floatingButton} onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText}>Add Food Item</Text>
+        </TouchableOpacity>
+      )}
+
+      
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Add Food Details</Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Dish Name"
+              value={formData.name}
+              onChangeText={(text) => handleInputChange('name', text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Description"
+              value={formData.description}
+              onChangeText={(text) => handleInputChange('description', text)}
+            />
+            <View style={styles.pickerWrapper}>
+              <Picker
+                selectedValue={formData.courseType}
+                onValueChange={(value) => handleInputChange('courseType', value)}
+                style={styles.picker}
+              >
+                <Picker.Item label="Select Course Type..." value="" />
+                <Picker.Item label="Starter" value="starter" />
+                <Picker.Item label="Main" value="main" />
+                <Picker.Item label="Dessert" value="dessert" />
+              </Picker>
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Price"
+              keyboardType="numeric"
+              value={formData.price}
+              onChangeText={(text) => handleInputChange('price', text)}
+            />
+
+            <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ImageBackground>
   );
 }
@@ -159,7 +169,7 @@ const styles = StyleSheet.create({
   },
   container: {
     paddingTop: 60,
-    paddingBottom: 40,
+    paddingBottom: 120, 
     alignItems: 'center',
   },
   title: {
@@ -168,15 +178,24 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 20,
   },
-  button: {
-    backgroundColor: 'orange',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
   buttonText: {
     fontWeight: 'bold',
     fontSize: 16,
+    color: 'white',
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 30,
+    alignSelf: 'center',
+    backgroundColor: 'orange',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 30,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
   section: {
     width: '90%',
