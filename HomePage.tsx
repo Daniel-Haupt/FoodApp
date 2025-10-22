@@ -1,4 +1,3 @@
-
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import {
@@ -13,11 +12,17 @@ import {
   Alert,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import Menu from './MenuScreen'; 
+import Menu from './MenuScreen';
 
 const bgImage = require('./assets/background.jpg');
 
-export default function MenuScreen() {
+type Dish = {
+  name: string;
+  description: string;
+  price: string;
+};
+
+export default function HomePage() {
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -26,12 +31,13 @@ export default function MenuScreen() {
     price: '',
   });
 
-  const [starters, setStarters] = useState<any[]>([]);
-  const [mains, setMains] = useState<any[]>([]);
-  const [desserts, setDesserts] = useState<any[]>([]);
+  const [starters, setStarters] = useState<Dish[]>([]);
+  const [mains, setMains] = useState<Dish[]>([]);
+  const [desserts, setDesserts] = useState<Dish[]>([]);
+
   const handleInputChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
-  }
+  };
 
   const handleSubmit = () => {
     const { name, description, courseType, price } = formData;
@@ -41,7 +47,12 @@ export default function MenuScreen() {
       return;
     }
 
-    const newDish = { name, description, price };
+    if (isNaN(Number(price)) || Number(price) <= 0) {
+      Alert.alert('Validation Error', 'Price must be a valid positive number.');
+      return;
+    }
+
+    const newDish: Dish = { name, description, price };
 
     if (courseType === 'starter') {
       setStarters([...starters, newDish]);
@@ -76,12 +87,7 @@ export default function MenuScreen() {
         </TouchableOpacity>
       )}
 
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
+      <Modal visible={modalVisible} transparent={true} animationType="slide" onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalView}>
             <Text style={styles.modalTitle}>Add Food Details</Text>
@@ -121,6 +127,13 @@ export default function MenuScreen() {
             <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
               <Text style={styles.submitButtonText}>Submit</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.submitButton, { backgroundColor: 'gray', marginTop: 10 }]}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.submitButtonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -129,7 +142,6 @@ export default function MenuScreen() {
 }
 
 const styles = StyleSheet.create({
- 
   background: {
     width: '100%',
     height: '100%',

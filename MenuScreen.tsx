@@ -15,34 +15,34 @@ type MenuProps = {
 
 export default function Menu({ starters, mains, desserts }: MenuProps) {
   return (
-    <View style={styles.rowContainer}>
-      <View style={styles.columnSection}>
-        <Text style={styles.sectionTitle}>Starters</Text>
+    <View style={styles.container}>
+      <View style={styles.section}>
+        <Text style={styles.title}>Starters</Text>
         {starters.map((dish, i) => (
-          <View key={i} style={styles.dishItem}>
-            <Text style={styles.dishName}>{dish.name}</Text>
+          <View key={i} style={styles.dish}>
+            <Text style={styles.name}>{dish.name}</Text>
             <Text>{dish.description}</Text>
             <Text>R{dish.price}</Text>
           </View>
         ))}
       </View>
 
-      <View style={styles.columnSection}>
-        <Text style={styles.sectionTitle}>Mains</Text>
+      <View style={styles.section}>
+        <Text style={styles.title}>Mains</Text>
         {mains.map((dish, i) => (
-          <View key={i} style={styles.dishItem}>
-            <Text style={styles.dishName}>{dish.name}</Text>
+          <View key={i} style={styles.dish}>
+            <Text style={styles.name}>{dish.name}</Text>
             <Text>{dish.description}</Text>
             <Text>R{dish.price}</Text>
           </View>
         ))}
       </View>
 
-      <View style={styles.columnSection}>
-        <Text style={styles.sectionTitle}>Desserts</Text>
+      <View style={styles.section}>
+        <Text style={styles.title}>Desserts</Text>
         {desserts.map((dish, i) => (
-          <View key={i} style={styles.dishItem}>
-            <Text style={styles.dishName}>{dish.name}</Text>
+          <View key={i} style={styles.dish}>
+            <Text style={styles.name}>{dish.name}</Text>
             <Text>{dish.description}</Text>
             <Text>R{dish.price}</Text>
           </View>
@@ -53,31 +53,26 @@ export default function Menu({ starters, mains, desserts }: MenuProps) {
 }
 
 const styles = StyleSheet.create({
-  rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 10,
-    marginTop: 20,
+  container: {
+    width: '90%',
   },
-  columnSection: {
-    flex: 1,
+  section: {
     backgroundColor: '#ffffffaa',
     borderRadius: 10,
     padding: 10,
-    marginHorizontal: 5,
+    marginVertical: 10,
     alignItems: 'center',
   },
-  sectionTitle: {
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  dishItem: {
+  dish: {
     marginBottom: 10,
     alignItems: 'center',
   },
-  dishName: {
+  name: {
     fontWeight: 'bold',
     fontSize: 16,
   },
