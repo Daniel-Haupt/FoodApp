@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import React from 'react';
 
 // Corrected image path and filename
-const bgImage = require('./assets/backgroundHP.jpeg');
+const bgImage = require('./assets/background.jpeg');
 
 export default function App() {
   return (
@@ -18,9 +18,10 @@ export default function App() {
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
     width: '100%',
     height: '100%',
+
+    
   },
   container: {
     flex: 1,
