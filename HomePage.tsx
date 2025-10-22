@@ -9,12 +9,14 @@ import {
   Modal,
   TextInput,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import Menu from './MenuScreen'; 
 
 const bgImage = require('./assets/background.jpg');
 
-export default function App() {
+export default function MenuScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -26,38 +28,33 @@ export default function App() {
   const [starters, setStarters] = useState<any[]>([]);
   const [mains, setMains] = useState<any[]>([]);
   const [desserts, setDesserts] = useState<any[]>([]);
-
   const handleInputChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
-  };
+  }
 
   const handleSubmit = () => {
-    const newDish = {
-      name: formData.name,
-      description: formData.description,
-      price: formData.price,
-    };
+    const { name, description, courseType, price } = formData;
 
-    if (formData.courseType === 'starter') {
+    if (!name || !description || !courseType || !price) {
+      Alert.alert('Validation Error', 'Please fill out all fields.');
+      return;
+    }
+
+    const newDish = { name, description, price };
+
+    if (courseType === 'starter') {
       setStarters([...starters, newDish]);
-    } else if (formData.courseType === 'main') {
+    } else if (courseType === 'main') {
       setMains([...mains, newDish]);
-    } else if (formData.courseType === 'dessert') {
+    } else if (courseType === 'dessert') {
       setDesserts([...desserts, newDish]);
     }
 
-    setFormData({
-      name: '',
-      description: '',
-      courseType: '',
-      price: '',
-    });
-
+    setFormData({ name: '', description: '', courseType: '', price: '' });
     setModalVisible(false);
   };
 
   return (
-    
     <ImageBackground source={bgImage} style={styles.background} resizeMode="cover">
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>THE FOOD APP</Text>
@@ -66,50 +63,18 @@ export default function App() {
           <Text>{starters.length + mains.length + desserts.length}</Text>
         </View>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Starters</Text>
-          {starters.map((dish, i) => (
-            <View key={i} style={styles.dishItem}>
-              <Text style={styles.dishName}>{dish.name}</Text>
-              <Text>{dish.description}</Text>
-              <Text>R{dish.price}</Text>
-            </View>
-          ))}
+          <Text style={styles.sectionTitle}>Menu</Text>
         </View>
-        
-          
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Mains</Text>
-          {mains.map((dish, i) => (
-            <View key={i} style={styles.dishItem}>
-              <Text style={styles.dishName}>{dish.name}</Text>
-              <Text>{dish.description}</Text>
-              <Text>R{dish.price}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Desserts</Text>
-          {desserts.map((dish, i) => (
-            <View key={i} style={styles.dishItem}>
-              <Text style={styles.dishName}>{dish.name}</Text>
-              <Text>{dish.description}</Text>
-              <Text>R{dish.price}</Text>
-            </View>
-          ))}
-        </View>
-
+        <Menu starters={starters} mains={mains} desserts={desserts} />
         <StatusBar style="auto" />
       </ScrollView>
 
-     
       {!modalVisible && (
         <TouchableOpacity style={styles.floatingButton} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText}>Add Food Item</Text>
         </TouchableOpacity>
       )}
 
-      
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -163,13 +128,14 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+ 
   background: {
     width: '100%',
     height: '100%',
   },
   container: {
     paddingTop: 60,
-    paddingBottom: 120, 
+    paddingBottom: 120,
     alignItems: 'center',
   },
   title: {
@@ -177,6 +143,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     marginBottom: 20,
+  },
+  section: {
+    width: '90%',
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#ffffffaa',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   buttonText: {
     fontWeight: 'bold',
@@ -196,25 +175,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-  },
-  section: {
-    width: '90%',
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#ffffffaa',
-    borderRadius: 10,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  dishItem: {
-    marginBottom: 10,
-  },
-  dishName: {
-    fontWeight: 'bold',
-    fontSize: 16,
   },
   modalOverlay: {
     flex: 1,
