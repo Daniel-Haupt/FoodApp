@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import React from 'react';
 
 
-const bgImage = require('./.jpeg');
+const bgImage = require('./assets/background.jpeg');
 
 
 export default function App() {
