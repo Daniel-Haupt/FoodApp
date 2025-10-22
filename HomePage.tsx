@@ -1,17 +1,153 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  ScrollView,
+} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
-// Corrected image path and filename
-const bgImage = require('./assets/background.jpeg');
+const bgImage = require('./assets/background.jpg');
 
 export default function App() {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    courseType: '',
+    price: '',
+  });
+
+  const [starters, setStarters] = useState<any[]>([]);
+  const [mains, setMains] = useState<any[]>([]);
+  const [desserts, setDesserts] = useState<any[]>([]);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const handleSubmit = () => {
+    const newDish = {
+      name: formData.name,
+      description: formData.description,
+      price: formData.price,
+    };
+
+    if (formData.courseType === 'starter') {
+      setStarters([...starters, newDish]);
+    } else if (formData.courseType === 'main') {
+      setMains([...mains, newDish]);
+    } else if (formData.courseType === 'dessert') {
+      setDesserts([...desserts, newDish]);
+    }
+
+    setFormData({
+      name: '',
+      description: '',
+      courseType: '',
+      price: '',
+    });
+
+    setModalVisible(false);
+  };
+
   return (
     <ImageBackground source={bgImage} style={styles.background} resizeMode="cover">
-      <View style={styles.container}>
-        <Text>Open up App.tsx to start working on your app!</Text>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>THE FOOD APP</Text>
+
+        <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText}>Add Food Item</Text>
+        </TouchableOpacity>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Starters</Text>
+          {starters.map((dish, i) => (
+            <View key={i} style={styles.dishItem}>
+              <Text style={styles.dishName}>{dish.name}</Text>
+              <Text>{dish.description}</Text>
+              <Text>R{dish.price}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Mains</Text>
+          {mains.map((dish, i) => (
+            <View key={i} style={styles.dishItem}>
+              <Text style={styles.dishName}>{dish.name}</Text>
+              <Text>{dish.description}</Text>
+              <Text>R{dish.price}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Desserts</Text>
+          {desserts.map((dish, i) => (
+            <View key={i} style={styles.dishItem}>
+              <Text style={styles.dishName}>{dish.name}</Text>
+              <Text>{dish.description}</Text>
+              <Text>R{dish.price}</Text>
+            </View>
+          ))}
+        </View>
+
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          animationType="slide"
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Add Food Details</Text>
+
+              <TextInput
+                style={styles.input}
+                placeholder="Dish Name"
+                value={formData.name}
+                onChangeText={(text) => handleInputChange('name', text)}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Description"
+                value={formData.description}
+                onChangeText={(text) => handleInputChange('description', text)}
+              />
+              <View style={styles.pickerWrapper}>
+                <Picker
+                  selectedValue={formData.courseType}
+                  onValueChange={(value) => handleInputChange('courseType', value)}
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Select Course Type..." value="" />
+                  <Picker.Item label="Starter" value="starter" />
+                  <Picker.Item label="Main" value="main" />
+                  <Picker.Item label="Dessert" value="dessert" />
+                </Picker>
+              </View>
+              <TextInput
+                style={styles.input}
+                placeholder="Price"
+                keyboardType="numeric"
+                value={formData.price}
+                onChangeText={(text) => handleInputChange('price', text)}
+              />
+
+              <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                <Text style={styles.submitButtonText}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
         <StatusBar style="auto" />
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -20,12 +156,92 @@ const styles = StyleSheet.create({
   background: {
     width: '100%',
     height: '100%',
-
-    
   },
   container: {
-    flex: 1,
+    paddingTop: 60,
+    paddingBottom: 40,
     alignItems: 'center',
+  },
+  title: {
+    fontSize: 42,
+    fontWeight: 'bold',
+    color: 'black',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: 'orange',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  section: {
+    width: '90%',
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#ffffffaa',
+    borderRadius: 10,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  dishItem: {
+    marginBottom: 10,
+  },
+  dishName: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalView: {
+    width: '85%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#aaa',
+    borderRadius: 6,
+    padding: 10,
+    marginBottom: 10,
+  },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: '#aaa',
+    borderRadius: 6,
+    marginBottom: 10,
+    overflow: 'hidden',
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+  },
+  submitButton: {
+    backgroundColor: 'green',
+    padding: 12,
+    borderRadius: 6,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  submitButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
