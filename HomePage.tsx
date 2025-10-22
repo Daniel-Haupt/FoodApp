@@ -2,13 +2,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import React from 'react';
 
-
-const bgImage = require('./assets/background.jpeg');
-
+// Corrected image path and filename
+const bgImage = require('./assets/backgroundHP.jpeg');
 
 export default function App() {
   return (
-    <ImageBackground source={bgImage} style={styles.background}>
+    <ImageBackground source={bgImage} style={styles.background} resizeMode="cover">
       <View style={styles.container}>
         <Text>Open up App.tsx to start working on your app!</Text>
         <StatusBar style="auto" />
@@ -20,7 +19,8 @@ export default function App() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
+    width: '100%',
+    height: '100%',
   },
   container: {
     flex: 1,
